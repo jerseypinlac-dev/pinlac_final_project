@@ -1,15 +1,23 @@
 <?php
 
 
+
+
 namespace App\Http\Controllers;
 
 
+
+
 use App\Events\StudentCreated;
+use App\Events\StudentUpdated;
+use App\Events\StudentDeleted;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Models\Student;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+
+
 
 
 class StudentController extends Controller
@@ -22,8 +30,12 @@ class StudentController extends Controller
             ->paginate(10);
 
 
+
+
         return view('students.index', compact('students'));
     }
+
+
 
 
     public function create(): View
@@ -32,12 +44,18 @@ class StudentController extends Controller
     }
 
 
+
+
     public function store(StoreStudentRequest $request): RedirectResponse
     {
         $student = Student::create($request->validated());
 
 
+
+
         broadcast(new StudentCreated($student))->toOthers();
+
+
 
 
         return redirect()
@@ -46,15 +64,26 @@ class StudentController extends Controller
     }
 
 
+
+
     public function edit(Student $student): View
     {
         return view('students.edit', compact('student'));
     }
 
 
+
+
     public function update(UpdateStudentRequest $request, Student $student): RedirectResponse
     {
         $student->update($request->validated());
+
+
+
+
+        broadcast(new StudentUpdated($student))->toOthers();
+
+
 
 
         return redirect()
@@ -63,9 +92,23 @@ class StudentController extends Controller
     }
 
 
+
+
     public function destroy(Student $student): RedirectResponse
     {
+        $studentId = $student->id;
+
+
+
+
         $student->delete();
+
+
+
+
+        broadcast(new StudentDeleted($studentId))->toOthers();
+
+
 
 
         return redirect()

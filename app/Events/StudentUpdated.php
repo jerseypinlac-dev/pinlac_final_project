@@ -12,7 +12,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 
-class StudentCreated implements ShouldBroadcastNow
+class StudentUpdated implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -28,7 +28,7 @@ class StudentCreated implements ShouldBroadcastNow
 
     public function broadcastAs(): string
     {
-        return 'student.created';
+        return 'student.updated';
     }
 
 
@@ -45,8 +45,6 @@ class StudentCreated implements ShouldBroadcastNow
         ];
     }
 }
-
-
 
 
 
